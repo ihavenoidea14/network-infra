@@ -14,4 +14,5 @@ variable "securityGroups" {
 
 variable "sourceDestCheck" {
   type = "string"
+  default = true
 }
