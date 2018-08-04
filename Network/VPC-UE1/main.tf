@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "vpc-ue1-internet" {
 }
 
 module "nat" {
-  source = "./EC2"
+  source = "../../EC2"
   ami = "ami-4c9e4b24",
   type = "t2.nano",
   subnetId = "${module.public-subnet-dev.subnetId}"
@@ -31,7 +31,7 @@ module "nat" {
 }
 
 module "jump" {
-  source = "./EC2"
+  source = "../../EC2"
   ami = "ami-657cf71a",
   type = "t2.nano",
   subnetId = "${module.public-subnet-dev.subnetId}"
@@ -42,7 +42,7 @@ module "jump" {
 }
 
 module "private" {
-  source = "./EC2"
+  source = "../../EC2"
   ami = "ami-657cf71a",
   type = "t2.nano",
   subnetId = "${module.private-subnet-dev.subnetId}"
@@ -53,14 +53,14 @@ module "private" {
 }
 
 module "nat-sg" {
-  source = "./SecurityGroups/nat"
+  source = "../../SecurityGroups/nat"
   name = "nat-sg"
   vpcCidr = ["${aws_vpc.vpc-ue1.cidr_block}"]
   vpcId = "${aws_vpc.vpc-ue1.id}"
 }
 
 module "default-sg" {
-  source = "./SecurityGroups/default"
+  source = "../../SecurityGroups/default"
   name = "default-sg"
   vpcId = "${aws_vpc.vpc-ue1.id}"
   vpcCidr = ["${aws_vpc.vpc-ue1.cidr_block}"]
