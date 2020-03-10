@@ -72,6 +72,8 @@ module "private-subnet-prod" {
   vpcId = "${aws_vpc.vpc-ue1.id}"
   cidrBlock = "192.168.1.0/24"
   name = "private-subnet-prod"
+  az = "us-east-1a"
+  tier = "private"
 }
 
 module "private-subnet-dev" {
@@ -79,6 +81,8 @@ module "private-subnet-dev" {
   vpcId = "${aws_vpc.vpc-ue1.id}"
   cidrBlock = "192.168.2.0/24"
   name = "private-subnet-dev"
+  az = "us-east-1a"
+  tier = "private"
 }
 
 module "lambda-subnet-dev" {
@@ -86,6 +90,8 @@ module "lambda-subnet-dev" {
   vpcId = "${aws_vpc.vpc-ue1.id}"
   cidrBlock = "192.168.5.0/24"
   name = "lambda-subnet-dev"
+  az = "us-east-1b"
+  tier = "private"
 }
 
 module "lambda-subnet-prod" {
@@ -93,6 +99,8 @@ module "lambda-subnet-prod" {
   vpcId = "${aws_vpc.vpc-ue1.id}"
   cidrBlock = "192.168.6.0/24"
   name = "lambda-subnet-prod"
+  az = "us-east-1b"
+  tier = "private"
 }
 
 module "public-subnet-prod" {
@@ -101,6 +109,18 @@ module "public-subnet-prod" {
   cidrBlock = "192.168.3.0/24"
   name = "public-subnet-prod"
   assign_public_ip = true
+  az = "us-east-1c"
+  tier = "public"
+}
+
+module "public-subnet-prod-2" {
+  source = "./Subnets"
+  vpcId = "${aws_vpc.vpc-ue1.id}"
+  cidrBlock = "192.168.7.0/24"
+  name = "public-subnet-prod"
+  assign_public_ip = true
+  az = "us-east-1d"
+  tier = "public"
 }
 
 module "public-subnet-dev" {
@@ -109,6 +129,28 @@ module "public-subnet-dev" {
   cidrBlock = "192.168.4.0/24"
   name = "public-subnet-dev"
   assign_public_ip = true
+  az = "us-east-1c"
+  tier = "public"
+}
+
+module "public-subnet-dev-2" {
+  source = "./Subnets"
+  vpcId = "${aws_vpc.vpc-ue1.id}"
+  cidrBlock = "192.168.8.0/24"
+  name = "public-subnet-dev"
+  assign_public_ip = true
+  az = "us-east-1d"
+  tier = "public"
+}
+
+module "public-subnet-dev-3" {
+  source = "./Subnets"
+  vpcId = "${aws_vpc.vpc-ue1.id}"
+  cidrBlock = "192.168.9.0/24"
+  name = "public-subnet-dev"
+  assign_public_ip = true
+  az = "us-east-1a"
+  tier = "public"
 }
 
 resource "aws_route_table" "private-rt" {
@@ -152,7 +194,22 @@ resource "aws_route_table_association" "public-rt-association-prod" {
   route_table_id = "${aws_route_table.public-rt.id}"
 }
 
+resource "aws_route_table_association" "public-rt-association-prod-2" {
+  subnet_id = "${module.public-subnet-prod-2.subnetId}"
+  route_table_id = "${aws_route_table.public-rt.id}"
+}
+
 resource "aws_route_table_association" "public-rt-association-dev" {
   subnet_id = "${module.public-subnet-dev.subnetId}"
+  route_table_id = "${aws_route_table.public-rt.id}"
+}
+
+resource "aws_route_table_association" "public-rt-association-dev-2" {
+  subnet_id = "${module.public-subnet-dev-2.subnetId}"
+  route_table_id = "${aws_route_table.public-rt.id}"
+}
+
+resource "aws_route_table_association" "public-rt-association-dev-3" {
+  subnet_id = "${module.public-subnet-dev-3.subnetId}"
   route_table_id = "${aws_route_table.public-rt.id}"
 }
